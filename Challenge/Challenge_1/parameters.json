@@ -1,0 +1,99 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadBalancers_web_lb_name": {
+            "value": null
+        },
+        "virtualMachines_jump_vm_name": {
+            "value": null
+        },
+        "loadBalancers_internal_lb_name": {
+            "value": null
+        },
+        "publicIPAddresses_jump_pip_name": {
+            "value": null
+        },
+        "availabilitySets_avail_set_1_name": {
+            "value": null
+        },
+        "availabilitySets_avail_set_2_name": {
+            "value": null
+        },
+        "availabilitySets_avail_set_3_name": {
+            "value": null
+        },
+        "publicIPAddresses_web_lb_pip_name": {
+            "value": null
+        },
+        "virtualMachines_app_tier_vm_1_name": {
+            "value": null
+        },
+        "virtualMachines_app_tier_vm_2_name": {
+            "value": null
+        },
+        "virtualMachines_web_tier_vm_1_name": {
+            "value": null
+        },
+        "virtualMachines_web_tier_vm_2_name": {
+            "value": null
+        },
+        "networkInterfaces_jump_vm_nic_name": {
+            "value": null
+        },
+        "networkSecurityGroups_jump_nsg_name": {
+            "value": null
+        },
+        "virtualNetworks_RedHat3Tier_vnet_name": {
+            "value": null
+        },
+        "virtualMachines_database_tier_vm_1_name": {
+            "value": null
+        },
+        "virtualMachines_database_tier_vm_2_name": {
+            "value": null
+        },
+        "networkSecurityGroups_app_tier_nsg_name": {
+            "value": null
+        },
+        "networkSecurityGroups_web_tier_nsg_name": {
+            "value": null
+        },
+        "networkInterfaces_app_tier_vm_nic_1_name": {
+            "value": null
+        },
+        "networkInterfaces_app_tier_vm_nic_2_name": {
+            "value": null
+        },
+        "networkInterfaces_web_tier_vm_nic_1_name": {
+            "value": null
+        },
+        "networkInterfaces_web_tier_vm_nic_2_name": {
+            "value": null
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage1_name": {
+            "value": null
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage2_name": {
+            "value": null
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage3_name": {
+            "value": null
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage4_name": {
+            "value": null
+        },
+        "networkSecurityGroups_database_tier_nsg_name": {
+            "value": null
+        },
+        "networkInterfaces_database_tier_vm_nic_1_name": {
+            "value": null
+        },
+        "networkInterfaces_database_tier_vm_nic_2_name": {
+            "value": null
+        },
+        "storageAccounts_gcrx6uv4cbccsdiagstorage_name": {
+            "value": null
+        }
+    }
+}

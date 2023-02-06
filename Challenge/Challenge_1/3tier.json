@@ -1,0 +1,2338 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadBalancers_web_lb_name": {
+            "defaultValue": "web-lb",
+            "type": "String"
+        },
+        "virtualMachines_jump_vm_name": {
+            "defaultValue": "jump-vm",
+            "type": "String"
+        },
+        "loadBalancers_internal_lb_name": {
+            "defaultValue": "internal-lb",
+            "type": "String"
+        },
+        "publicIPAddresses_jump_pip_name": {
+            "defaultValue": "jump-pip",
+            "type": "String"
+        },
+        "availabilitySets_avail_set_1_name": {
+            "defaultValue": "avail-set-1",
+            "type": "String"
+        },
+        "availabilitySets_avail_set_2_name": {
+            "defaultValue": "avail-set-2",
+            "type": "String"
+        },
+        "availabilitySets_avail_set_3_name": {
+            "defaultValue": "avail-set-3",
+            "type": "String"
+        },
+        "publicIPAddresses_web_lb_pip_name": {
+            "defaultValue": "web-lb-pip",
+            "type": "String"
+        },
+        "virtualMachines_app_tier_vm_1_name": {
+            "defaultValue": "app-tier-vm-1",
+            "type": "String"
+        },
+        "virtualMachines_app_tier_vm_2_name": {
+            "defaultValue": "app-tier-vm-2",
+            "type": "String"
+        },
+        "virtualMachines_web_tier_vm_1_name": {
+            "defaultValue": "web-tier-vm-1",
+            "type": "String"
+        },
+        "virtualMachines_web_tier_vm_2_name": {
+            "defaultValue": "web-tier-vm-2",
+            "type": "String"
+        },
+        "networkInterfaces_jump_vm_nic_name": {
+            "defaultValue": "jump-vm-nic",
+            "type": "String"
+        },
+        "networkSecurityGroups_jump_nsg_name": {
+            "defaultValue": "jump-nsg",
+            "type": "String"
+        },
+        "virtualNetworks_RedHat3Tier_vnet_name": {
+            "defaultValue": "RedHat3Tier-vnet",
+            "type": "String"
+        },
+        "virtualMachines_database_tier_vm_1_name": {
+            "defaultValue": "database-tier-vm-1",
+            "type": "String"
+        },
+        "virtualMachines_database_tier_vm_2_name": {
+            "defaultValue": "database-tier-vm-2",
+            "type": "String"
+        },
+        "networkSecurityGroups_app_tier_nsg_name": {
+            "defaultValue": "app-tier-nsg",
+            "type": "String"
+        },
+        "networkSecurityGroups_web_tier_nsg_name": {
+            "defaultValue": "web-tier-nsg",
+            "type": "String"
+        },
+        "networkInterfaces_app_tier_vm_nic_1_name": {
+            "defaultValue": "app-tier-vm-nic-1",
+            "type": "String"
+        },
+        "networkInterfaces_app_tier_vm_nic_2_name": {
+            "defaultValue": "app-tier-vm-nic-2",
+            "type": "String"
+        },
+        "networkInterfaces_web_tier_vm_nic_1_name": {
+            "defaultValue": "web-tier-vm-nic-1",
+            "type": "String"
+        },
+        "networkInterfaces_web_tier_vm_nic_2_name": {
+            "defaultValue": "web-tier-vm-nic-2",
+            "type": "String"
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage1_name": {
+            "defaultValue": "gcrx6uv4cbccsstorage1",
+            "type": "String"
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage2_name": {
+            "defaultValue": "gcrx6uv4cbccsstorage2",
+            "type": "String"
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage3_name": {
+            "defaultValue": "gcrx6uv4cbccsstorage3",
+            "type": "String"
+        },
+        "storageAccounts_gcrx6uv4cbccsstorage4_name": {
+            "defaultValue": "gcrx6uv4cbccsstorage4",
+            "type": "String"
+        },
+        "networkSecurityGroups_database_tier_nsg_name": {
+            "defaultValue": "database-tier-nsg",
+            "type": "String"
+        },
+        "networkInterfaces_database_tier_vm_nic_1_name": {
+            "defaultValue": "database-tier-vm-nic-1",
+            "type": "String"
+        },
+        "networkInterfaces_database_tier_vm_nic_2_name": {
+            "defaultValue": "database-tier-vm-nic-2",
+            "type": "String"
+        },
+        "storageAccounts_gcrx6uv4cbccsdiagstorage_name": {
+            "defaultValue": "gcrx6uv4cbccsdiagstorage",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkSecurityGroups_app_tier_nsg_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "App NSG",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkSecurityGroups_database_tier_nsg_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "Database NSG",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('publicIPAddresses_jump_pip_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "Jump VM Public IP",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "ipAddress": "20.120.20.224",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "jumpgcrx6uv4cbccs",
+                    "fqdn": "jumpgcrx6uv4cbccs.eastus.cloudapp.azure.com"
+                },
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('publicIPAddresses_web_lb_pip_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "Web LB Public IP",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "ipAddress": "20.120.20.153",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "weblbgcrx6uv4cbccs",
+                    "fqdn": "weblbgcrx6uv4cbccs.eastus.cloudapp.azure.com"
+                },
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "Diagnostics Storage Account",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccounts_gcrx6uv4cbccsstorage1_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "VM Storage Accounts",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccounts_gcrx6uv4cbccsstorage2_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "VM Storage Accounts",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccounts_gcrx6uv4cbccsstorage3_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "VM Storage Accounts",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccounts_gcrx6uv4cbccsstorage4_name')]",
+            "location": "eastus",
+            "tags": {
+                "displayName": "VM Storage Accounts",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('loadBalancers_web_lb_name'), '/loadBalancerBackend')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('loadBalancers_internal_lb_name'), '/loadBalancerBackEnd')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_internal_lb_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_database_tier_vm_nic_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'database-tier-subnet')]"
+            ],
+            "tags": {
+                "displayName": "Database Tier VM NICs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_database_tier_vm_nic_1_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"5b331d5f-4844-4bf6-abfd-068c1968efd8\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.3.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'database-tier-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_database_tier_vm_nic_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'database-tier-subnet')]"
+            ],
+            "tags": {
+                "displayName": "Database Tier VM NICs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_database_tier_vm_nic_2_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"b099c424-3545-48b1-b591-2f139fe8c45d\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.3.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'database-tier-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkSecurityGroups_jump_nsg_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_jump_nsg_name'), 'SSH-allow')]"
+            ],
+            "tags": {
+                "displayName": "Jump NSG",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "SSH-allow",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_jump_nsg_name'), 'SSH-allow')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "0.0.0.0/0",
+                            "destinationAddressPrefix": "10.0.0.128/25",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('networkSecurityGroups_web_tier_nsg_name'), '/HTTP-allow')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_web_tier_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.1.0/24",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('networkSecurityGroups_web_tier_nsg_name'), '/HTTPS-allow')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_web_tier_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.1.0/24",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('networkSecurityGroups_jump_nsg_name'), '/SSH-allow')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jump_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.0.128/25",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage1_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage2_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage3_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsstorage4_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('availabilitySets_avail_set_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_web_tier_vm_1_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_web_tier_vm_2_name'))]"
+            ],
+            "tags": {
+                "displayName": "Availability Sets",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Aligned"
+            },
+            "properties": {
+                "platformUpdateDomainCount": 5,
+                "platformFaultDomainCount": 2,
+                "virtualMachines": [
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_web_tier_vm_1_name'))]"
+                    },
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_web_tier_vm_2_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('availabilitySets_avail_set_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_app_tier_vm_1_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_app_tier_vm_2_name'))]"
+            ],
+            "tags": {
+                "displayName": "Availability Sets",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Aligned"
+            },
+            "properties": {
+                "platformUpdateDomainCount": 5,
+                "platformFaultDomainCount": 2,
+                "virtualMachines": [
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_app_tier_vm_1_name'))]"
+                    },
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_app_tier_vm_2_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('availabilitySets_avail_set_3_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_database_tier_vm_1_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_database_tier_vm_2_name'))]"
+            ],
+            "tags": {
+                "displayName": "Availability Sets",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Aligned"
+            },
+            "properties": {
+                "platformUpdateDomainCount": 5,
+                "platformFaultDomainCount": 2,
+                "virtualMachines": [
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_database_tier_vm_1_name'))]"
+                    },
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_database_tier_vm_2_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_jump_vm_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jump_vm_nic_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "Jump VM",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_jump_vm_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_jump_vm_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "jumpvm",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jump_vm_nic_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('loadBalancers_internal_lb_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+            ],
+            "tags": {
+                "displayName": "Internal Load Balancer",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "loadBalancerFrontEnd",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_internal_lb_name')), '/frontendIPConfigurations/loadBalancerFrontEnd')]",
+                        "properties": {
+                            "privateIPAddress": "10.0.1.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]"
+                            },
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "loadBalancerBackEnd",
+                        "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]",
+                        "properties": {}
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "internallbruleSSH",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_internal_lb_name')), '/loadBalancingRules/internallbruleSSH')]",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_internal_lb_name')), '/frontendIPConfigurations/loadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 22,
+                            "backendPort": 22,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 15,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "Default",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+                            },
+                            "backendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+                                }
+                            ],
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_internal_lb_name')), '/probes/internallbProbeSSH')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "internallbProbeSSH",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_internal_lb_name')), '/probes/internallbProbeSSH')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 22,
+                            "intervalInSeconds": 15,
+                            "numberOfProbes": 2,
+                            "probeThreshold": 1
+                        }
+                    }
+                ],
+                "inboundNatRules": [],
+                "inboundNatPools": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('loadBalancers_web_lb_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_web_lb_pip_name'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+            ],
+            "tags": {
+                "displayName": "External Load Balancer",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "loadBalancerFrontEnd",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/frontendIPConfigurations/loadBalancerFrontEnd')]",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_web_lb_pip_name'))]"
+                            }
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "loadBalancerBackend",
+                        "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]",
+                        "properties": {}
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "LBRuleForlb80IP",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/loadBalancingRules/LBRuleForlb80IP')]",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/frontendIPConfigurations/loadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 80,
+                            "backendPort": 80,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 5,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "Default",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+                            },
+                            "backendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+                                }
+                            ],
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/probes/weblbProbeHttp')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LBRuleForlb443IP",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/loadBalancingRules/LBRuleForlb443IP')]",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/frontendIPConfigurations/loadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 443,
+                            "backendPort": 443,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 5,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "Default",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+                            },
+                            "backendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+                                }
+                            ],
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/probes/weblbProbeHttps')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "weblbProbeHttp",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/probes/weblbProbeHttp')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 80,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2,
+                            "probeThreshold": 1
+                        }
+                    },
+                    {
+                        "name": "weblbProbeHttps",
+                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_web_lb_name')), '/probes/weblbProbeHttps')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 443,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2,
+                            "probeThreshold": 1
+                        }
+                    }
+                ],
+                "inboundNatRules": [],
+                "inboundNatPools": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_app_tier_vm_nic_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'app-tier-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+            ],
+            "tags": {
+                "displayName": "App Tier VM NICs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_app_tier_vm_nic_1_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"4ac39118-54c8-4b30-a296-9081d5808430\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.2.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'app-tier-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_app_tier_vm_nic_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'app-tier-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+            ],
+            "tags": {
+                "displayName": "App Tier VM NICs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_app_tier_vm_nic_2_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"af0f2860-9484-49f2-ac56-23e99e084de7\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.2.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'app-tier-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_internal_lb_name'), 'loadBalancerBackEnd')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_jump_vm_nic_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_jump_pip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'jump-subnet')]"
+            ],
+            "tags": {
+                "displayName": "Jump VM NIC",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jump_vm_nic_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"745eb88a-2853-4627-b8fa-75cc5750a33b\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.0.132",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_jump_pip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'jump-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_web_tier_vm_nic_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+            ],
+            "tags": {
+                "displayName": "Web Tier VM NICs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web_tier_vm_nic_1_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"2a055412-8820-468a-88c5-0025a0c0f631\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.1.6",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkInterfaces_web_tier_vm_nic_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+            ],
+            "tags": {
+                "displayName": "Web Tier VM NICs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web_tier_vm_nic_2_name')), '/ipConfigurations/ipconfig1')]",
+                        "etag": "W/\"9785fa25-cc75-4f84-a18d-3d67eec11cca\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.1.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_web_lb_name'), 'loadBalancerBackend')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('networkSecurityGroups_web_tier_nsg_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_web_tier_nsg_name'), 'HTTP-allow')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_web_tier_nsg_name'), 'HTTPS-allow')]"
+            ],
+            "tags": {
+                "displayName": "Web NSG",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "HTTP-allow",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_web_tier_nsg_name'), 'HTTP-allow')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "0.0.0.0/0",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "HTTPS-allow",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_web_tier_nsg_name'), 'HTTPS-allow')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "0.0.0.0/0",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('virtualNetworks_RedHat3Tier_vnet_name'), '/app-tier-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_RedHat3Tier_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_app_tier_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.2.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_app_tier_nsg_name'))]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('virtualNetworks_RedHat3Tier_vnet_name'), '/database-tier-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_RedHat3Tier_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_database_tier_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.3.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_database_tier_nsg_name'))]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('virtualNetworks_RedHat3Tier_vnet_name'), '/jump-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_RedHat3Tier_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jump_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.0.128/25",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jump_nsg_name'))]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2022-07-01",
+            "name": "[concat(parameters('virtualNetworks_RedHat3Tier_vnet_name'), '/web-tier-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_RedHat3Tier_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_web_tier_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_web_tier_nsg_name'))]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-apptiervm-861e00bc-cc03-4da2-a71c-19ce0eb001b4')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-apptiervm-b8ae5013-49f6-4169-bdcb-e03843391997')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-databaset-3885e6c4-acf3-4d37-a61c-06933545bde7')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-databaset-6b3fa4fe-8c55-460d-88f3-962ee1818350')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-jumpvm-1951c65b-94a3-4054-8ed4-4bac2b9741f9')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-webtiervm-aba5019a-dc45-444a-8be9-d5cfb443b461')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '/default/bootdiagnostics-webtiervm-acdb6139-8e56-4e4b-9736-c016a5e63b5f')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_app_tier_vm_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_2_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_app_tier_vm_nic_1_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "App Tier VMs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_2_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_app_tier_vm_1_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_app_tier_vm_1_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "appserver1",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_app_tier_vm_nic_1_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_app_tier_vm_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_2_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_app_tier_vm_nic_2_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "App Tier VMs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_2_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_app_tier_vm_2_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_app_tier_vm_2_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "appserver2",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_app_tier_vm_nic_2_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_database_tier_vm_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_3_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_database_tier_vm_nic_1_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "Database Tier VMs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_3_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_database_tier_vm_1_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_database_tier_vm_1_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "databaseserver1",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_database_tier_vm_nic_1_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_database_tier_vm_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_3_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_database_tier_vm_nic_2_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "Database Tier VMs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_3_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_database_tier_vm_2_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_database_tier_vm_2_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "databaseserver2",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_database_tier_vm_nic_2_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_web_tier_vm_1_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_1_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web_tier_vm_nic_1_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "Web Tier VMs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_1_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_web_tier_vm_1_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_web_tier_vm_1_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "webserver1",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web_tier_vm_nic_1_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2022-08-01",
+            "name": "[parameters('virtualMachines_web_tier_vm_2_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_1_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web_tier_vm_nic_2_name'))]",
+                "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'))]"
+            ],
+            "tags": {
+                "displayName": "Web Tier VMs",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_avail_set_1_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7.3",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_web_tier_vm_2_name'), '_OSDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_web_tier_vm_2_name'), '_OSDisk'))]"
+                        },
+                        "deleteOption": "Detach",
+                        "diskSizeGB": 32
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "webserver2",
+                    "adminUsername": "ujjwal2795",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web_tier_vm_nic_2_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('storageAccounts_gcrx6uv4cbccsdiagstorage_name'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('virtualNetworks_RedHat3Tier_vnet_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_web_tier_nsg_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'app-tier-subnet')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_app_tier_nsg_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'database-tier-subnet')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_database_tier_nsg_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'jump-subnet')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jump_nsg_name'))]"
+            ],
+            "tags": {
+                "displayName": "Virtual Network",
+                "quickstartName": "rhel-3tier-iaas",
+                "provider": "9d2c71fc-96ba-4b4a-93b3-14def5bc96fc"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "web-tier-subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'web-tier-subnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.1.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_web_tier_nsg_name'))]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "app-tier-subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'app-tier-subnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.2.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_app_tier_nsg_name'))]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "database-tier-subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'database-tier-subnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.3.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_database_tier_nsg_name'))]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "jump-subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_RedHat3Tier_vnet_name'), 'jump-subnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.0.128/25",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jump_nsg_name'))]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        }
+    ]
+}
