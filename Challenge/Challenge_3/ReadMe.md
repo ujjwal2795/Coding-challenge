@@ -2,7 +2,7 @@
 
 Here i have used python language to solve the code and tried to run it locally on VS code.
 
-# Explaination
+# Explanation
 
 1. The function get_value_from_nested_object takes two arguments: the nested object obj and the key key in the format of key1/key2/key3.
 2. The key string is split into a list of individual keys using the split method. For example, "x/y/z" becomes ["x", "y", "z"].
